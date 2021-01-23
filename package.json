@@ -1,9 +1,8 @@
 {
   "name": "helpbot",
-  "version": "0.0.0",
-  "private": true,
-  "author": "Johan Gant",
-  "description": "A simple helpful robot for your Company",
+  "version": "0.0.1",
+  "author": "NICHS",
+  "description": "A simple helpful robot for NICHS",
   "dependencies": {
     "hubot": "^3.3.2",
     "hubot-diagnostics": "^1.0.0",
