@@ -1,1 +1,1 @@
-web: bin/hubot -a zulip
+web: bin/hubot --adapter zulip --name "HelpBot"
