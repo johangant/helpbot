@@ -1,0 +1,2 @@
+# Tests fail with Dropbox >= 11.
+dropbox==10.*
