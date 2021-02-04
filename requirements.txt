@@ -8,3 +8,6 @@ pytest
 -e ./zulip_bots
 -e git+https://github.com/zulip/zulint@639c0d34c23ac559ef0f7b9510cf95f73f6d0eb9#egg=zulint==1.0.0
 mypy==0.770
+google-api-core>=1.4.1
+dialogflow>=0.5.1
+python-dotenv

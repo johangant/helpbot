@@ -1,8 +1,12 @@
 # See readme.md for instructions on running this code.
-import logging
-import json
 
-import apiai
+from dotenv import load_dotenv
+load_dotenv()
+
+import logging
+import os
+import dialogflow_v2 as dialogflow
+from google.api_core.exceptions import InvalidArgument
 
 from typing import Any, Dict
 
@@ -14,25 +18,29 @@ Simply send this bot a message, and it will respond depending on the configured 
 def get_bot_result(message_content: str, config: Dict[str, str], sender_id: str) -> str:
     if message_content.strip() == '' or message_content.strip() == 'help':
         return config['bot_info']
-    ai = apiai.ApiAI(config['key'])
+
+    SERVICE_USER_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    DIALOGFLOW_PROJECT_ID = os.getenv("DIALOGFLOW_PROJECT_ID")
+    DIALOGFLOW_LANGUAGE_CODE = os.getenv("DIALOGFLOW_LANGUAGE_CODE")
+    SESSION_ID = os.getenv("SESSION_ID")
+
+    text_to_be_analyzed = message_content.strip()
+
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(DIALOGFLOW_PROJECT_ID, SESSION_ID)
+    text_input = dialogflow.types.TextInput(text=text_to_be_analyzed, language_code=DIALOGFLOW_LANGUAGE_CODE)
+    query_input = dialogflow.types.QueryInput(text=text_input)
     try:
-        request = ai.text_request()
-        request.session_id = sender_id
-        request.query = message_content
-        response = request.getresponse()
-        res_str = response.read().decode('utf8', 'ignore')
-        res_json = json.loads(res_str)
-        if res_json['status']['errorType'] != 'success' and 'result' not in res_json.keys():
-            return 'Error {}: {}.'.format(res_json['status']['code'], res_json['status']['errorDetails'])
-        if res_json['result']['fulfillment']['speech'] == '':
-            if 'alternateResult' in res_json.keys():
-                if res_json['alternateResult']['fulfillment']['speech'] != '':
-                    return res_json['alternateResult']['fulfillment']['speech']
-            return 'Error. No result.'
-        return res_json['result']['fulfillment']['speech']
-    except Exception as e:
+        response = session_client.detect_intent(session=session, query_input=query_input)
+    except InvalidArgument:
         logging.exception(str(e))
         return 'Error. {}.'.format(str(e))
+
+    print("Query text:", response.query_result.query_text)
+    print("Detected intent:", response.query_result.intent.display_name)
+    print("Detected intent confidence:", response.query_result.intent_detection_confidence)
+    print("Fulfillment text:", response.query_result.fulfillment_text)
+        
 
 class DialogFlowHandler:
     '''
@@ -50,7 +58,8 @@ class DialogFlowHandler:
             '''
 
     def handle_message(self, message: Dict[str, str], bot_handler: Any) -> None:
-        result = get_bot_result(message['content'], self.config_info, message['sender_id'])
+        result = get_bot_result(message['content'], self.config_info, message['sender_email'])
         bot_handler.send_reply(message, result)
+
 
 handler_class = DialogFlowHandler
