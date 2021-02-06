@@ -92,17 +92,6 @@ class ZulipBot(object):
         self.client.send_message(message)
 
 def main():
-    SERVICE_USER_FILE = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-    DIALOGFLOW_PROJECT_ID = os.environ.get("DIALOGFLOW_PROJECT_ID")
-    DIALOGFLOW_LANGUAGE_CODE = os.environ.get("DIALOGFLOW_LANGUAGE_CODE")
-    DIALOGFLOW_KB_ID = os.environ.get("DIALOGFLOW_KB_ID")
-    SESSION_ID = str(uuid.uuid4())
-
-    # Set Zulip server details.
-    ZULIP_SITE = os.environ.get("ZULIP_SITE")
-    ZULIP_EMAIL = os.environ.get("ZULIP_EMAIL")
-    ZULIP_API_KEY = os.environ.get("ZULIP_API_KEY")
-
     # Activate Zulip client
     bot = ZulipBot()
     bot.client.call_on_each_message(bot.process)    
@@ -117,6 +106,17 @@ def main():
 
 if __name__ == '__main__':    
     try:
+        SERVICE_USER_FILE = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+        DIALOGFLOW_PROJECT_ID = os.environ.get("DIALOGFLOW_PROJECT_ID")
+        DIALOGFLOW_LANGUAGE_CODE = os.environ.get("DIALOGFLOW_LANGUAGE_CODE")
+        DIALOGFLOW_KB_ID = os.environ.get("DIALOGFLOW_KB_ID")
+        SESSION_ID = str(uuid.uuid4())
+
+        # Set Zulip server details.
+        ZULIP_SITE = os.environ.get("ZULIP_SITE")
+        ZULIP_EMAIL = os.environ.get("ZULIP_EMAIL")
+        ZULIP_API_KEY = os.environ.get("ZULIP_API_KEY")
+
         main()
     except KeyboardInterrupt:
         print("HealthBot stopping")
