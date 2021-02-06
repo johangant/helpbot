@@ -5,9 +5,6 @@ import uuid
 import os
 import json
 
-from dotenv import load_dotenv
-load_dotenv()
-
 def detect_intent_knowledge(project_id, session_id, language_code,
                             knowledge_base_id, text_query):
     """Returns the result of detect intent with querying Knowledge Connector.
@@ -95,16 +92,16 @@ class ZulipBot(object):
         self.client.send_message(message)
 
 def main():
-    SERVICE_USER_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-    DIALOGFLOW_PROJECT_ID = os.getenv("DIALOGFLOW_PROJECT_ID")
-    DIALOGFLOW_LANGUAGE_CODE = os.getenv("DIALOGFLOW_LANGUAGE_CODE")
-    DIALOGFLOW_KB_ID = os.getenv("DIALOGFLOW_KB_ID")
+    SERVICE_USER_FILE = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    DIALOGFLOW_PROJECT_ID = os.environ.get("DIALOGFLOW_PROJECT_ID")
+    DIALOGFLOW_LANGUAGE_CODE = os.environ.get("DIALOGFLOW_LANGUAGE_CODE")
+    DIALOGFLOW_KB_ID = os.environ.get("DIALOGFLOW_KB_ID")
     SESSION_ID = str(uuid.uuid4())
 
     # Set Zulip server details.
-    ZULIP_SITE = os.getenv("ZULIP_SITE")
-    ZULIP_EMAIL = os.getenv("ZULIP_EMAIL")
-    ZULIP_API_KEY = os.getenv("ZULIP_API_KEY")    
+    ZULIP_SITE = os.environ.get("ZULIP_SITE")
+    ZULIP_EMAIL = os.environ.get("ZULIP_EMAIL")
+    ZULIP_API_KEY = os.environ.get("ZULIP_API_KEY")
 
     # Activate Zulip client
     bot = ZulipBot()
