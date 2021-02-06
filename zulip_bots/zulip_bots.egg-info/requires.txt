@@ -1,5 +1,0 @@
-pip
-zulip
-html2text
-lxml
-BeautifulSoup4
