@@ -1,1 +1,1 @@
-web: pip install -r requirements.txt && python healthbot.py
+web: pip install -r requirements.txt && python app.py
