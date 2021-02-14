@@ -39,9 +39,7 @@ class ZulipBot(object):
             """
             Dialogflow response handling.
             """
-            df_response = self.df_client.detect_intent_knowledge(content)
-            first_answer = next(iter(df_response.answers))
-            response = first_answer.answer
+            response = self.df_client.handle_query(content)
 
         # First answer (For now).
         message = {

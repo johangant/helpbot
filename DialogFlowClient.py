@@ -8,44 +8,36 @@ class DialogflowAClient():
         self.DIALOGFLOW_PROJECT_ID = config["DIALOGFLOW_PROJECT_ID"]
         self.DIALOGFLOW_LANGUAGE_CODE = config["DIALOGFLOW_LANGUAGE_CODE"]
         self.DIALOGFLOW_KB_ID = config["DIALOGFLOW_KB_ID"]
+        self.session_client = dialogflow.SessionsClient()
 
-    def detect_intent_knowledge(text_query):
-        """Returns the result of detect intent with querying Knowledge Connector."""
-        session_id = str(uuid.uuid4())
+    def get_session(self):
+        session = {}
+        session["id"] = str(uuid.uuid4())
+        session["path"] = self.session_client.session_path(self.DIALOGFLOW_PROJECT_ID, session["id"])
 
-        session_client = dialogflow.SessionsClient()
+        return session
 
-        session_path = session_client.session_path(self.DIALOGFLOW_PROJECT_ID, session_id)
-        print('Session path: {}\n'.format(session_path))
+    def handle_query(self, text_query):
+        """Returns the result of detect intent with texts as inputs.
+        Using the same `session_id` between requests allows continuation
+        of the conversation."""
+
+        text_query = text_query.strip()
+
+        if (not text_query):
+            return
+
+        session = self.get_session()
+        # print('Session path: {}\n'.format(session["path"]))
 
         text_input = dialogflow.TextInput(text=text_query, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
-
+        # print(text_input)
         query_input = dialogflow.QueryInput(text=text_input)
+        # print(query_input)
 
-        knowledge_base_path = dialogflow.KnowledgeBasesClient \
-            .knowledge_base_path(self.DIALOGFLOW_PROJECT_ID, self.DIALOGFLOW_KB_ID)
-
-        query_params = dialogflow.QueryParameters(
-            knowledge_base_names=[knowledge_base_path])
-
-        request = dialogflow.DetectIntentRequest(
-            session=session_path,
-            query_input=query_input,
-            query_params=query_params
+        response = self.session_client.detect_intent(
+            request={"session": session["path"], "query_input": query_input}
         )
-        response = session_client.detect_intent(request=request)
 
-        # print('=' * 20)
-        # print('Query text: {}'.format(response.query_result.query_text))
-        # print('Detected intent: {} (confidence: {})\n'.format(
-        #     response.query_result.intent.display_name,
-        #     response.query_result.intent_detection_confidence))
-        # print('Fulfillment text: {}\n'.format(
-        #     response.query_result.fulfillment_text))
-        # print('Knowledge results:')
-        knowledge_answers = response.query_result.knowledge_answers
-        # for answers in knowledge_answers.answers:
-        #     print(' - Answer: {}'.format(answers.answer))
-        #     print(' - Confidence: {}'.format(
-        #         answers.match_confidence))
-        return knowledge_answers
+        if (response.query_result.intent):
+            return response.query_result.fulfillment_text
