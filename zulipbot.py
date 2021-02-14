@@ -1,6 +1,6 @@
 import os
 import zulip
-import dialogflow_adapter as df 
+import dialogflow_adapter as df
 
 # # Set Zulip server details.
 ZULIP_SITE = os.environ.get("ZULIP_SITE")
@@ -26,18 +26,18 @@ class ZulipBot(object):
         stream_topic = msg['subject']
 
         if sender_email == ZULIP_EMAIL:
-            return 
+            return
 
         response = ""
-        
+
         if (content.lower() == "help"):
-            response = "You rang??"
+            response = self.help_message()
         else:
             df_response = df.detect_intent_knowledge(content)
             first_answer = next(iter(df_response.answers))
             response = first_answer.answer
 
-        # First answer (For now).        
+        # First answer (For now).
         message = {
             "type": type,
             "subject": msg["subject"],
@@ -46,3 +46,13 @@ class ZulipBot(object):
         }
 
         self.client.send_message(message)
+
+    def help_message(self):
+        message = "Hello, here are a few things you can ask me to help with.\
+                \n* Ask me about healthy eating. Eg: Where can I find out about healthy diets and eating?\
+                \n* Someone to support you with your action plan. Eg: Who can I chat with to help me with my action plan?\
+                \nI'm learning all the time and I'm currently in my early stages so please be kind. If you have ideas about\
+                what else you might like me to help with, or the quality of my answers, please pop a message into\
+                [the feedback stream](https://nichs.zulipchat.com/#narrow/stream/275798-Feedback/topic/Comments/near/224995780)"
+
+        return message
