@@ -1,16 +1,16 @@
-import os
 import zulip
-import dialogflow_adapter as df
-
-# # Set Zulip server details.
-ZULIP_SITE = os.environ.get("ZULIP_SITE")
-ZULIP_EMAIL = os.environ.get("ZULIP_EMAIL")
-ZULIP_API_KEY = os.environ.get("ZULIP_API_KEY")
 
 class ZulipBot(object):
-    def __init__(self):
+    def __init__(self, config, DialogFlowClient):
+        self.ZULIP_SITE = config["ZULIP_SITE"]
+        self.ZULIP_EMAIL = config["ZULIP_EMAIL"]
+        self.ZULIP_API_KEY = config["ZULIP_API_KEY"]
+
         self.client = zulip.Client()
         self.subscribe_all()
+
+        self.df_client = DialogFlowClient
+
         print("SUCCESS: Zulip bot started, press Ctrl/Cmd + C to exit")
 
     def subscribe_all(self):
@@ -25,15 +25,21 @@ class ZulipBot(object):
         stream_name = msg['display_recipient']
         stream_topic = msg['subject']
 
-        if sender_email == ZULIP_EMAIL:
+        if sender_email == self.ZULIP_EMAIL:
             return
 
         response = ""
 
         if (content.lower() == "help"):
+            """
+            Help/usage information.
+            """
             response = self.help_message()
         else:
-            df_response = df.detect_intent_knowledge(content)
+            """
+            Dialogflow response handling.
+            """
+            df_response = self.df_client.detect_intent_knowledge(content)
             first_answer = next(iter(df_response.answers))
             response = first_answer.answer
 
