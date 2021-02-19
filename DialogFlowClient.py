@@ -7,7 +7,6 @@ class DialogflowAClient():
         self.SERVICE_USER_FILE = config["GOOGLE_APPLICATION_CREDENTIALS"]
         self.DIALOGFLOW_PROJECT_ID = config["DIALOGFLOW_PROJECT_ID"]
         self.DIALOGFLOW_LANGUAGE_CODE = config["DIALOGFLOW_LANGUAGE_CODE"]
-        self.DIALOGFLOW_KB_ID = config["DIALOGFLOW_KB_ID"]
         self.session_client = dialogflow.SessionsClient()
 
     def get_session(self):

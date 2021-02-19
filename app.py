@@ -15,7 +15,6 @@ if __name__ == '__main__':
     df_config["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     df_config["DIALOGFLOW_PROJECT_ID"] = os.environ.get("DIALOGFLOW_PROJECT_ID")
     df_config["DIALOGFLOW_LANGUAGE_CODE"] = os.environ.get("DIALOGFLOW_LANGUAGE_CODE")
-    df_config["DIALOGFLOW_KB_ID"] = os.environ.get("DIALOGFLOW_KB_ID")
 
     # Start up instances of DialogflowClient and ZulipBot client classes.
     dialogFlowClient = DialogflowAClient(df_config)
