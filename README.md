@@ -17,7 +17,7 @@ A small bot that allows Zulip users to @mention it and receive feedback from a D
 
 * Copy the example environment variables file to a standard `.env` file: `cp .env.example .env` and populate it with your details. **NEVER COMMIT THIS FILE TO SOURCE CODE**.
 * Create a new Python virtual environment: `python3 -m venv venv`
-* Activate it: `source env/bin/activate`
+* Activate it: `source venv/bin/activate`
 * Install dependencies: `pip3 install -r requirements.txt`
 * Load your environment variables: `source .env`
 * Start the app: `python3 app.py`
