@@ -1,3 +1,4 @@
+import json
 import uuid
 from google.cloud import dialogflow_v2beta1 as dialogflow
 
@@ -8,6 +9,20 @@ class DialogflowAClient():
         self.DIALOGFLOW_PROJECT_ID = config["DIALOGFLOW_PROJECT_ID"]
         self.DIALOGFLOW_LANGUAGE_CODE = config["DIALOGFLOW_LANGUAGE_CODE"]
         self.session_client = dialogflow.SessionsClient()
+
+        # Hard baked MVP dictionary of stream mappings to ids.
+        self.streams = {
+            "alcohol": "275267",
+            "covid": "277736",
+            "health_champions": "277849",
+            "feedback": "275798",
+            "finance": "275163",
+            "help": "277855",
+            "nutrition": "275295",
+            "physical_activity": "275271",
+            "stop_smoking": "275278",
+            "stress": "275528",
+        }
 
     def get_session(self):
         session = {}
@@ -82,4 +97,11 @@ class DialogflowAClient():
                     response.query_result.intent_detection_confidence,
                 )
             )
-            print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+
+            if (response.query_result.fulfillment_text):
+                print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+
+            # if (response.query_result.fulfillment_messages):
+            #     for message in response.query_result.fulfillment_messages:
+            #         m = dialogflow.
+
