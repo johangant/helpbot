@@ -40,3 +40,46 @@ class DialogflowAClient():
 
         if (response.query_result.intent):
             return response.query_result.fulfillment_text
+
+    def raw_query(self, text_query):
+        text_query = text_query.strip()
+
+        if (not text_query):
+            return
+
+        session = self.get_session()
+        print('Session path: {}\n'.format(session["path"]))
+
+        text_input = dialogflow.TextInput(text=text_query, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
+        query_input = dialogflow.QueryInput(text=text_input)
+
+        response = self.session_client.detect_intent(
+            request={"session": session["path"], "query_input": query_input}
+        )
+
+        return response
+
+    def detect_intent_texts(self, texts):
+        """Returns the result of detect intent with texts as inputs.
+        Using the same `session_id` between requests allows continuation
+        of the conversation."""
+        session = self.get_session()
+        print('Session path: {}\n'.format(session["path"]))
+
+        for text in texts:
+            text_input = dialogflow.TextInput(text=text, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
+            query_input = dialogflow.QueryInput(text=text_input)
+
+            response = self.session_client.detect_intent(
+                request={"session": session["path"], "query_input": query_input}
+            )
+
+            print("=" * 20)
+            print("Query text: {}".format(response.query_result.query_text))
+            print(
+                "Detected intent: {} (confidence: {})\n".format(
+                    response.query_result.intent.display_name,
+                    response.query_result.intent_detection_confidence,
+                )
+            )
+            print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
