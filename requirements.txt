@@ -2,14 +2,19 @@ cachetools==4.2.1
 certifi==2020.12.5
 cffi==1.14.5
 chardet==4.0.0
+click==7.1.2
 cryptography==3.4.6
 distro==1.5.0
+Flask==1.1.2
 google-api-core==1.26.0
 google-auth==1.27.0
 google-cloud-dialogflow==2.0.0
 googleapis-common-protos==1.52.0
 grpcio==1.35.0
 idna==2.10
+itsdangerous==1.1.0
+Jinja2==2.11.3
+MarkupSafe==1.1.1
 matrix-client==0.3.2
 packaging==20.9
 proto-plus==1.13.0
@@ -24,4 +29,5 @@ requests==2.25.1
 rsa==4.7.2
 six==1.15.0
 urllib3==1.26.3
+Werkzeug==1.0.1
 zulip==0.7.1
