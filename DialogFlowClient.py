@@ -2,7 +2,7 @@ import json
 import uuid
 from google.cloud import dialogflow_v2beta1 as dialogflow
 
-class DialogflowAClient():
+class DialogflowClient():
 
     def __init__(self, config):
         self.SERVICE_USER_FILE = config["GOOGLE_APPLICATION_CREDENTIALS"]

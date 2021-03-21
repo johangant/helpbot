@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 import os
+import zulip
 
+from flask import Flask
 from ZulipBot import ZulipBot
-from DialogFlowClient import DialogflowAClient
+from DialogFlowClient import DialogflowClient
+
+app = Flask(__name__)
 
 if __name__ == '__main__':
     # Get key config for our classes.
@@ -17,8 +21,20 @@ if __name__ == '__main__':
     df_config["DIALOGFLOW_LANGUAGE_CODE"] = os.environ.get("DIALOGFLOW_LANGUAGE_CODE")
 
     # Start up instances of DialogflowClient and ZulipBot client classes.
-    dialogFlowClient = DialogflowAClient(df_config)
+    dialogFlowClient = DialogflowClient(df_config)
 
     bot = ZulipBot(zulip_config, dialogFlowClient)
     # Tell our bot to trigger a function on every message from the API.
     bot.client.call_on_each_message(bot.process)
+
+@app.route('/zulip/streams')
+def get_streams():
+    client = zulip.Client()
+    zstreams = client.get_streams()
+
+    streams = {}
+
+    for item in zstreams['streams']:
+        streams[item['stream_id']] = item['name']
+
+    return streams
