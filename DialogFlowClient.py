@@ -53,8 +53,14 @@ class DialogflowAClient():
             request={"session": session["path"], "query_input": query_input}
         )
 
+        query_response = ""
+
         if (response.query_result.intent):
-            return response.query_result.fulfillment_text
+            query_response = response.query_result.fulfillment_text
+        else:
+            query_response = "Sorry, I'm not sure how to respond to that right now."
+
+        return query_response
 
     def raw_query(self, text_query):
         text_query = text_query.strip()
