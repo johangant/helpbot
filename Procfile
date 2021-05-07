@@ -1,1 +1,1 @@
-bot: pip install -r requirements.txt && python app.py
+web: gunicorn wsgi:app

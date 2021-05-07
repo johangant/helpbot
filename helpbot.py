@@ -4,7 +4,7 @@ import os
 from ZulipBot import ZulipBot
 from DialogFlowClient import DialogflowAClient
 
-if __name__ == '__main__':
+def run():
     # Get key config for our classes.
     zulip_config, df_config = {}, {}
 
