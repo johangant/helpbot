@@ -1,1 +1,1 @@
-web: pip install -r requirements.txt && python app.py
+worker: pip install -r requirements.txt && python app.py
